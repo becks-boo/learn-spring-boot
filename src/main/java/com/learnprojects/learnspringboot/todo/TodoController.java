@@ -15,11 +15,8 @@ public class TodoController {
     }
 
     @RequestMapping("list-todos")
-    public String listAllTodos() {
+    public  List<Todo> listAllTodos() {
         List<Todo> todoList = todoService.findByUsername("in28minutes");
-        for (Todo todo: todoList) {
-            return todo.toString();
-        }
-        return "No list found";
+        return todoList;
     }
 }
