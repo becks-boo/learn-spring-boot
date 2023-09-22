@@ -1,10 +1,14 @@
 package com.learnprojects.learnspringboot.todo;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
 public class Todo {
+
     private int id;
     private String username;
     @Size(min = 10, message = "Enter atleast 10 characters")
