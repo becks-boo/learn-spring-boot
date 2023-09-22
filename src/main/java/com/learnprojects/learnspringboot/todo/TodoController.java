@@ -24,11 +24,11 @@ public class TodoController {
     }
 
     @RequestMapping("list-todos")
-    public String listAllTodos(ModelMap model) {
+    public List<Todo> listAllTodos(ModelMap model) {
         String username = getLoggedInUsername(model);
         List<Todo> todoList = todoService.findByUsername(username);
         // This is the jsp method that renders the listTodos view
-        return "listTodos";
+        return todoList;
     }
 
     @RequestMapping(value = "add-todo", method = RequestMethod.GET)
