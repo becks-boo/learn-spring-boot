@@ -12,20 +12,20 @@ import java.time.LocalDate;
 import java.util.List;
 
 //TODO (Q) - How can I change it to the way you want it to be?
-// @RestController
+@RestController
 @SessionAttributes("name")
-public class TodoController {
-    private TodoService todoService;
+public class TodoControllerJpa {
+    private TodoRepository todoRepository;
 
-    public TodoController(TodoService todoService) {
-        this.todoService = todoService;
+    public TodoControllerJpa(TodoRepository todoRepository) {
+        this.todoRepository = todoRepository;
     }
 
     @RequestMapping("list-todos")
     public List<Todo> listAllTodos(ModelMap model) {
         String username = getLoggedInUsername(model);
-        List<Todo> todoList = todoService.findByUsername(username);
-        // This is the jsp method that renders the listTodos view
+        List<Todo> todoList = todoRepository.findByUsername(username);
+
         return todoList;
     }
 
@@ -41,22 +41,22 @@ public class TodoController {
         }
 
         String username = getLoggedInUsername(model);
-        todoService.addTodo(username, todo.getDescription(),
-                LocalDate.now().plusYears(1), false);
+        todo.setUsername(username);
+        todoRepository.save(todo);
         // This renders the listTodos jsp view
         return "redirect:list-todos";
     }
 
     @RequestMapping("delete-todo")
     public String deleteTodo(@RequestParam int id) {
-        todoService.deleteById(id);
+        todoRepository.deleteById(id);
 
         return "redirect:list-todos";
     }
 
     @RequestMapping(value = "update-todo", method = RequestMethod.GET)
     public String showUpdateTodoPage(@RequestParam int id, ModelMap model) {
-        Todo todo = todoService.findById(id);
+        Todo todo = todoRepository.findById(id).get();
         model.addAttribute("todo", todo);
         return "todo";
     }
@@ -69,7 +69,7 @@ public class TodoController {
 
         String username = getLoggedInUsername(model);
         todo.setUsername(username);
-        todoService.updateTodo(todo);
+        todoRepository.save(todo);
 
         return "redirect:list-todos";
     }
@@ -79,10 +79,4 @@ public class TodoController {
 
         return authentication.getName();
     }
-
-    /*@RequestMapping("list-todos")
-    public  List<Todo> listAllTodos() {
-        List<Todo> todoList = todoService.findByUsername("in28minutes");
-        return todoList;
-    }*/
 }
